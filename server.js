@@ -1,4 +1,11 @@
 //  OpenShift sample Node application
+
+function p(s){console.log(s)}
+
+p("Running server.js...")
+//process.env.DATABASE_SERVICE_NAME = "CollaboRateDb"
+p("process.env.DATABASE_SERVICE_NAME='"+process.env.DATABASE_SERVICE_NAME+"'...")
+
 var express = require('express'),
     fs      = require('fs'),
     app     = express(),
@@ -15,7 +22,9 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
-if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
+if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) 
+{
+	p("process.env.DATABASE_SERVICE_NAME is not null, gone into another init block...")
   var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
       mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
       mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
@@ -36,13 +45,22 @@ if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
 }
 var db = null,
     dbDetails = new Object();
-
+	
 var initDb = function(callback) {
-  if (mongoURL == null) return;
+  if (mongoURL == null) 
+  {
+	  p("db init failed: mongoURL is null")
+	  return;
+  }
 
   var mongodb = require('mongodb');
-  if (mongodb == null) return;
-
+  if (mongodb == null) 
+  {
+	  p("db init failed: mongodb module is missing!")
+	  return;
+  }
+  
+  p("ATTEMPTING TO CONNECT TO MONGODB...");
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
       callback(err);

@@ -3,6 +3,7 @@
 function p(s){console.log(s)}
 
 p("Running server.js...")
+
 //process.env.DATABASE_SERVICE_NAME = "CollaboRateDb"
 p("process.env.DATABASE_SERVICE_NAME='"+process.env.DATABASE_SERVICE_NAME+"'...")
 
@@ -11,7 +12,10 @@ var express = require('express'),
     app     = express(),
     eps     = require('ejs'),
     morgan  = require('morgan');
-    
+   
+//Eliminates 'views' folder...
+app.set('views', __dirname)
+	
 Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
